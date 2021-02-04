@@ -11,24 +11,11 @@ import (
 )
 
 var (
-	log          = logrus.WithField("package", "cybervox")
 	clientID     = os.Getenv("CLIENT_ID")
 	clientSecret = os.Getenv("CLIENT_SECRET")
 )
 
-type (
-	oauthRequest struct {
-		ClientID     string `json:"client_id"`
-		ClientSecret string `json:"client_secret"`
-		Audience     string `json:"audience"`
-		GrantType    string `json:"grant_type"`
-	}
-	oauthResponse struct {
-		AccessToken string `json:"access_token"`
-		ExpiresIn   int    `json:"expires_in"`
-		TokenType   string `json:"token_type"`
-	}
-)
+var log = logrus.WithField("package", "cybervox")
 
 func getAccessToken(clientID, clientSecret string) (accessToken string, err error) {
 	if accessToken = getCachedAccessToken(); accessToken != "" {
