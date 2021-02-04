@@ -17,7 +17,7 @@ go run cmd/example/main.go
 
 # Usage
 
-[![GoDoc](https://godoc.org/github.com/cyberlabs-ai/cybervox-client-go?status.svg)](https://godoc.org/github.com/cyberlabs-ai/cybervox-client-go)
+[![GoDoc](https://godoc.org/github.com/cyberlabsai/cybervox-client-go?status.svg)](https://godoc.org/github.com/cyberlabsai/cybervox-client-go)
 
 ```console
 go doc -all
