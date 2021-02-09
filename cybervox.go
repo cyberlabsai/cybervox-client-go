@@ -7,7 +7,22 @@ import (
 	"os"
 
 	"github.com/gorilla/websocket"
+	"github.com/parnurzeal/gorequest"
 	"github.com/sirupsen/logrus"
+)
+
+type (
+	oauthRequest struct {
+		ClientID     string `json:"client_id"`
+		ClientSecret string `json:"client_secret"`
+		Audience     string `json:"audience"`
+		GrantType    string `json:"grant_type"`
+	}
+	oauthResponse struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int    `json:"expires_in"`
+		TokenType   string `json:"token_type"`
+	}
 )
 
 var (
@@ -17,18 +32,36 @@ var (
 
 var log = logrus.WithField("package", "cybervox")
 
-func getAccessToken(clientID, clientSecret string) (accessToken string, err error) {
-	if accessToken = getCachedAccessToken(); accessToken != "" {
-		log.Debugln("using cached access token...")
-		return
-	}
+func fetchAccessToken(clientID string, clientSecret string) (oauthResponse, error) {
+	var (
+		request = oauthRequest{
+			ClientID:     clientID,
+			ClientSecret: clientSecret,
+			Audience:     "https://api.cybervox.ai",
+			GrantType:    "client_credentials",
+		}
+		response oauthResponse
+	)
 
-	var response oauthResponse
-	if response, err = fetchAccessToken(clientID, clientSecret); err != nil {
-		return
+	log.Debugln("fetching access token...")
+	res, body, errs := gorequest.New().Post("https://api.cybervox.ai/auth").
+		Send(request).
+		EndStruct(&response)
+	if errs != nil {
+		return oauthResponse{}, fmt.Errorf("gorequest(%s): %v", string(body), errs)
 	}
-	// go ahead even if we cannot save it
-	_ = saveAccessToken(response.AccessToken)
+	if res.StatusCode != http.StatusOK {
+		return oauthResponse{}, fmt.Errorf("http.Status: %v", res.Status)
+	}
+	return response, nil
+}
+
+func getAccessToken(clientID, clientSecret string) (string, error) {
+	var response oauthResponse
+	var err error
+	if response, err = fetchAccessToken(clientID, clientSecret); err != nil {
+		return "", err
+	}
 
 	return response.AccessToken, nil
 }
