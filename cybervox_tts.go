@@ -16,6 +16,7 @@ type (
 	TTSRequestPayload struct {
 		Timestamp int64  `json:"timestamp"`
 		Text      string `json:"text"`
+		Voice     string `json:"voice"`
 	}
 	// TTSResponse contains the parameters sent in response to a `tts` message.
 	TTSResponse struct {
@@ -32,11 +33,12 @@ type (
 
 // TTS sends a text-to-speech request on an established websocket connection.
 // It receives the websocket.Conn and assumes it's properly connected and returns a TTSResponse.
-func TTS(ws *websocket.Conn, text string) (response TTSResponse) {
+func TTS(ws *websocket.Conn, text, voice string) (response TTSResponse) {
 	request := TTSRequest{
 		Emit: "tts",
 		Payload: TTSRequestPayload{
 			Text:      text,
+			Voice:     voice,
 			Timestamp: time.Now().UnixNano(),
 		},
 	}

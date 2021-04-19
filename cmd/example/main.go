@@ -34,7 +34,7 @@ func main() {
 	log.Printf("   PING: Round-trip: %8.2f ms, Success: %v\n", float64(delta)/1e6, pingResponse.Payload.Success)
 
 	// --- TTS ---
-	ttsResponse := cybervox.TTS(ws, "Olá Mundo!")
+	ttsResponse := cybervox.TTS(ws, "Olá Mundo!", "perola")
 	delta = time.Now().UnixNano() - ttsResponse.Payload.Timestamp
 	log.Printf("    TTS: Round-trip: %8.2f ms, Success: %v, Reason: %q, AudioURL: https://api.cybervox.ai%s\n",
 		float64(delta)/1e6,
