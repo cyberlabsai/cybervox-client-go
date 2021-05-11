@@ -12,7 +12,14 @@ To run the example implementation:
 export CLIENT_ID=< provided client id >
 export CLIENT_SECRET=< provided client secret >
 
+# complete API
 go run cmd/example/main.go
+
+# text-to-speech only
+go run cmd/tts/main.go "olá mundo"
+
+# speech-to-text only
+go run cmd/stt/main.go ola-mundo.wav
 ```
 
 # Usage
